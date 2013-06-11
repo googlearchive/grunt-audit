@@ -1,0 +1,23 @@
+{
+  "name": "grunt-audit",
+  "version": "0.0.0",
+  "description": "> Generates an audit trail for minified builds with build sha1s and git revision numbers",
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-jshint": "~0.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "",
+  "license": "BSD",
+  "readmeFilename": "README.md"
+}
