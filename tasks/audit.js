@@ -41,6 +41,7 @@ module.exports = function(grunt) {
     }
 
     function repoRevs(repos, callback) {
+      repos = repos || [];
       grunt.util.async.map(repos, findRev, function(err, results) {
         if (err) {
           callback(err);
@@ -52,7 +53,7 @@ module.exports = function(grunt) {
 
     function out(revs, hashes, dest) {
       // build audit log
-      var out = [
+      var log = [
         'AUDIT LOG ' + grunt.template.today('isoDateTime'),
         '---------',
         '',
@@ -66,10 +67,10 @@ module.exports = function(grunt) {
       ].join(options.separator);
 
       if (dest) {
-        grunt.file.write(dest, out);
+        grunt.file.write(dest, log);
         grunt.log.writeln('Wrote audit log:', dest, 'successfully');
       } else {
-        grunt.log.writeln(out);
+        grunt.log.writeln(log);
       }
     }
 
@@ -88,7 +89,7 @@ module.exports = function(grunt) {
       }).map(fileHash).join(options.separator);
       grunt.util.async.waterfall([
         function(callback) {
-          var fn = function(err, result) {
+          function fn(err, result) {
             callback(err, result);
           }
           repoRevs(f.repos, fn);
