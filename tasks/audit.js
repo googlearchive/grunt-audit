@@ -12,7 +12,7 @@ module.exports = function(grunt) {
   var crypto = require('crypto');
   var path = require('path');
 
-  grunt.registerMultiTask('audit', 'Generate audit trail.', function() {
+  grunt.registerMultiTask('audit', 'Generate audit trail with sha1 hashes', function() {
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
       separator: grunt.util.linefeed,
