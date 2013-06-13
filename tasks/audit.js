@@ -24,7 +24,7 @@ module.exports = function(grunt) {
       var sha1sum = crypto.createHash('sha1');
       sha1sum.update(blob);
       var hex = sha1sum.digest('hex');
-      return filepath + ' ' + hex;
+      return filepath + ': ' + hex;
     }
 
     function findRev(repoPath, callback) {
@@ -35,7 +35,7 @@ module.exports = function(grunt) {
         if (error) {
           callback(error);
         } else {
-          callback(null, path.basename(path.resolve(repoPath)) + ' ' + result);
+          callback(null, path.basename(path.resolve(repoPath)) + ': ' + result);
         }
       });
     }
@@ -56,20 +56,25 @@ module.exports = function(grunt) {
         cmd: 'npm',
         args: ['list', '--depth=0']
       }, function(error, result, code) {
-        callback(null, result.stdout);
+        var tree = result.stdout;
+        var treeArray = tree.split(options.separator);
+        treeArray.shift();
+        treeArray = treeArray.map(function(s){ return s.replace('@',': ').slice(4); });
+        tree = treeArray.join(options.separator);
+        callback(null, tree);
       });
     }
 
     function out(revs, hashes, modules, dest) {
       // build audit log
       var log = [
-        'AUDIT LOG ' + grunt.template.today('isoDateTime'),
+        'BUILD LOG',
         '---------',
+        'Build Time: ' + grunt.template.today('isoDateTime'),
         '',
         'NODEJS INFORMATION',
         '==================',
         'nodejs: ' + process.version,
-        'modules:',
         modules,
         '',
         'REPO REVISIONS',
