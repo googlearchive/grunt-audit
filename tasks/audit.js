@@ -67,6 +67,7 @@ module.exports = function(grunt) {
         '---------',
         '',
         'NODEJS INFORMATION',
+        '==================',
         'nodejs: ' + process.version,
         'modules:',
         modules,
