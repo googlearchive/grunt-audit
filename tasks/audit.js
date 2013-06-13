@@ -51,11 +51,25 @@ module.exports = function(grunt) {
       });
     }
 
-    function out(revs, hashes, dest) {
+    function moduleVersions(callback) {
+      grunt.util.spawn({
+        cmd: 'npm',
+        args: ['list', '--depth=0']
+      }, function(error, result, code) {
+        callback(null, result.stdout);
+      });
+    }
+
+    function out(revs, hashes, modules, dest) {
       // build audit log
       var log = [
         'AUDIT LOG ' + grunt.template.today('isoDateTime'),
         '---------',
+        '',
+        'NODEJS INFORMATION',
+        'nodejs: ' + process.version,
+        'modules:',
+        modules,
         '',
         'REPO REVISIONS',
         '==============',
@@ -87,15 +101,17 @@ module.exports = function(grunt) {
           return true;
         }
       }).map(fileHash).join(options.separator);
-      grunt.util.async.waterfall([
+      grunt.util.async.parallel([
         function(callback) {
           repoRevs(options.repos, callback);
         },
-        function(repos, callback) {
-          out(repos, src, f.dest);
-          callback();
+        function(callback) {
+          moduleVersions(callback)
         }
-      ], function(err, result) {
+      ], function(err, results) {
+        if (!err) {
+          out(results[0], src, results[1], f.dest);
+        }
         done(err);
       });
     });

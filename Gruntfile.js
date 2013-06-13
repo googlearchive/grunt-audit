@@ -37,6 +37,12 @@ module.exports = function(grunt) {
         files: {
           'tmp/audit.log': ['test/fixtures/testing', 'test/fixtures/123'],
         },
+      },
+      stdout: {
+        src: ['test/fixtures/testing', 'test/fixtures/123'],
+        options: {
+          repos: ['.']
+        }
       }
     },
 
