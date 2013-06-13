@@ -35,18 +35,8 @@ module.exports = function(grunt) {
         if (error) {
           callback(error);
         } else {
+          // assume repo directory name is repo "name"
           callback(null, path.basename(path.resolve(repoPath)) + ': ' + result);
-        }
-      });
-    }
-
-    function repoRevs(repos, callback) {
-      repos = repos || [];
-      grunt.util.async.map(repos, findRev, function(err, results) {
-        if (err) {
-          callback(err);
-        } else {
-          callback(null, results);
         }
       });
     }
@@ -58,14 +48,16 @@ module.exports = function(grunt) {
       }, function(error, result, code) {
         var tree = result.stdout;
         var treeArray = tree.split(options.separator);
+        // only show dependencies, not top level
         treeArray.shift();
-        treeArray = treeArray.map(function(s){ return s.replace('@',': ').slice(4); });
+        // remove leading utf8 line chars, module@version -> module: version
+        treeArray = treeArray.map(function(s){ return s.slice(4).replace('@',': '); });
         tree = treeArray.join(options.separator);
         callback(null, tree);
       });
     }
 
-    function out(revs, hashes, modules, dest) {
+    function out(revs, modules, hashes, dest) {
       // build audit log
       var log = [
         'BUILD LOG',
@@ -107,16 +99,18 @@ module.exports = function(grunt) {
           return true;
         }
       }).map(fileHash).join(options.separator);
-      grunt.util.async.parallel([
-        function(callback) {
-          repoRevs(options.repos, callback);
+
+      grunt.util.async.parallel({
+        repos: function(callback) {
+          // find commit hash for each repo
+          grunt.util.async.map(options.repos || [], findRev, callback);
         },
-        function(callback) {
+        versions: function(callback) {
           moduleVersions(callback)
-        }
-      ], function(err, results) {
+        },
+      }, function(err, results) {
         if (!err) {
-          out(results[0], src, results[1], f.dest);
+          out(results.repos, results.versions, src, f.dest);
         }
         done(err);
       });
