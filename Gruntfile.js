@@ -31,10 +31,12 @@ module.exports = function(grunt) {
     // Configuration to be run (and then tested).
     audit: {
       default_options: {
+        options: {
+          repos: ['.']
+        },
         files: {
           'tmp/audit.log': ['test/fixtures/testing', 'test/fixtures/123'],
         },
-        repos: ['.']
       }
     },
 

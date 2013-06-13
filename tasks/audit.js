@@ -89,10 +89,7 @@ module.exports = function(grunt) {
       }).map(fileHash).join(options.separator);
       grunt.util.async.waterfall([
         function(callback) {
-          function fn(err, result) {
-            callback(err, result);
-          }
-          repoRevs(f.repos, fn);
+          repoRevs(options.repos, callback);
         },
         function(repos, callback) {
           out(repos, src, f.dest);
