@@ -46,7 +46,6 @@ A list of git repository paths that will be printed in the audit log under the R
 ```
 Repo: Sha1Hash
 ```
-A string value that is used to do something with whatever.
 
 ## Contributing
 Please follow the guidelines in the `CONTRIBUTING.md` file
