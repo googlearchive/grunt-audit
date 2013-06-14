@@ -30,7 +30,7 @@ module.exports = function(grunt) {
 
     // Configuration to be run (and then tested).
     audit: {
-      default_options: {
+      default: {
         options: {
           repos: ['.']
         },
@@ -38,6 +38,7 @@ module.exports = function(grunt) {
           'tmp/audit.log': ['test/fixtures/testing', 'test/fixtures/123'],
         },
       },
+      // this one prints to stdout for convenience, untested
       stdout: {
         src: ['test/fixtures/testing', 'test/fixtures/123'],
         options: {
@@ -63,7 +64,7 @@ module.exports = function(grunt) {
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'audit', 'nodeunit']);
+  grunt.registerTask('test', ['clean', 'audit:default', 'nodeunit']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);

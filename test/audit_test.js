@@ -22,27 +22,76 @@ var grunt = require('grunt');
     test.ifError(value)
 */
 
+var log;
+function readLog() {
+  if (!log) {
+    log = grunt.file.read('tmp/audit.log').split(grunt.util.linefeed);
+  }
+  return log;
+}
+
+var SHA1 = /^[0-9a-f]{40}$/i;
+function validHash(hash) {
+  return SHA1.test(hash);
+}
+
+var crypto = require('crypto');
+function sha1sum(file) {
+  var hash = crypto.createHash('sha1');
+  hash.update(grunt.file.read(file));
+  return hash.digest('hex');
+}
+
 exports.audit = {
   setUp: function(done) {
     // setup here if necessary
     done();
   },
-  default_options: function(test) {
+  madeFile: function(test) {
     test.expect(1);
-
-    var actual = grunt.file.read('tmp/default_options');
-    var expected = grunt.file.read('test/expected/default_options');
-    test.equal(actual, expected, 'should describe what the default behavior is.');
-
+    test.ok(grunt.file.exists('tmp/audit.log'), 'audit log should exist');
     test.done();
   },
-  custom_options: function(test) {
-    test.expect(1);
-
-    var actual = grunt.file.read('tmp/custom_options');
-    var expected = grunt.file.read('test/expected/custom_options');
-    test.equal(actual, expected, 'should describe what the custom option(s) behavior is.');
-
+  timeStamp: function(test) {
+    test.expect(2);
+    var log = readLog();
+    var time = log[2];
+    var a = time.split(': ');
+    test.equal(a[0], 'Build Time');
+    var d = new Date(a[1]);
+    test.notEqual(d.toString(), 'Invalid Date', 'Build time should be valid');
     test.done();
   },
+  nodeVersion: function(test) {
+    test.expect(1);
+    var log = readLog();
+    var node_line = log[6];
+    var a = node_line.split(': ');
+    test.equal(a[1], process.version, 'node should be reported');
+    test.done();
+  },
+  gitVersions: function(test) {
+    test.expect(3);
+    var log = readLog();
+    var index = log.indexOf('REPO REVISIONS');
+    test.notEqual(index, -1, 'REPO REVISIONS should be a title');
+    var repoline = log[index + 2];
+    var repo = repoline.split(': ')[1];
+    test.ok(repo,'repo should be reported');
+    test.ok(validHash(repo), 'repo should be a valid sha1 hash');
+    test.done();
+  },
+  buildHashes: function(test) {
+    test.expect(5);
+    var log = readLog();
+    var index = log.indexOf('BUILD HASHES');
+    test.notEqual(index, -1, 'BUILD HASHES should be a title');
+    var line = log[index + 2].split(': ');
+    test.equal(line[0], 'test/fixtures/testing', 'first file is testing');
+    test.equal(line[1], sha1sum(line[0]), 'sha1 hash should be equal');
+    line = log[index + 3].split(': ');
+    test.equal(line[0], 'test/fixtures/123', 'second file is 123');
+    test.equal(line[1], sha1sum(line[0]), 'sha1 hash should be equal');
+    test.done();
+  }
 };

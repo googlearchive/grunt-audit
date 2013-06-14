@@ -106,7 +106,7 @@ module.exports = function(grunt) {
           grunt.util.async.map(options.repos || [], findRev, callback);
         },
         versions: function(callback) {
-          moduleVersions(callback)
+          moduleVersions(callback);
         },
       }, function(err, results) {
         if (!err) {
