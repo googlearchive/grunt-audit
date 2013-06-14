@@ -1,7 +1,7 @@
 {
   "name": "grunt-audit",
-  "version": "0.0.0",
-  "description": "> Generates an audit trail for minified builds with build sha1s and git revision numbers",
+  "version": "0.0.1",
+  "description": "Generates an audit trail for minified builds with build sha1s and git revision numbers",
   "main": "Gruntfile.js",
   "directories": {
     "test": "test"
@@ -15,10 +15,10 @@
     "grunt-contrib-jshint": "~0.6.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "grunt test"
   },
-  "repository": "",
-  "author": "",
+  "repository": "git://github.com/Polymer/grunt-audit.git",
+  "author": "The Polymer Authors",
   "license": "BSD",
   "readmeFilename": "README.md"
 }
