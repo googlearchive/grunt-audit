@@ -42,9 +42,10 @@ function validHash(hash) {
 }
 
 var crypto = require('crypto');
+var fs = require('fs');
 function sha1sum(file) {
   var hash = crypto.createHash('sha1');
-  hash.update(grunt.file.read(file));
+  hash.update(fs.readFileSync(file));
   return hash.digest('hex');
 }
 

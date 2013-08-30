@@ -1,6 +1,6 @@
 {
   "name": "grunt-audit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Generates an audit trail for minified builds with build sha1s and git revision numbers",
   "main": "Gruntfile.js",
   "directories": {

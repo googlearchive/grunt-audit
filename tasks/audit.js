@@ -9,6 +9,7 @@
 module.exports = function(grunt) {
   var crypto = require('crypto');
   var path = require('path');
+  var fs = require('fs');
 
   grunt.registerMultiTask('audit', 'Generate audit trail with sha1 hashes', function() {
     // Merge task-specific and/or target-specific options with these defaults.
@@ -18,7 +19,7 @@ module.exports = function(grunt) {
     });
 
     function fileHash(filepath) {
-      var blob = grunt.file.read(filepath);
+      var blob = fs.readFileSync(filepath);
       var sha1sum = crypto.createHash('sha1');
       sha1sum.update(blob);
       var hex = sha1sum.digest('hex');
