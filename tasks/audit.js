@@ -8,8 +8,9 @@
 
 module.exports = function(grunt) {
   var crypto = require('crypto');
-  var path = require('path');
   var fs = require('fs');
+  var path = require('path');
+  var ri = require('read-installed');
 
   grunt.registerMultiTask('audit', 'Generate audit trail with sha1 hashes', function() {
     // Merge task-specific and/or target-specific options with these defaults.
@@ -41,18 +42,11 @@ module.exports = function(grunt) {
     }
 
     function moduleVersions(callback) {
-      grunt.util.spawn({
-        cmd: 'npm',
-        args: ['list', '--depth=0']
-      }, function(error, result, code) {
-        var tree = result.stdout;
-        var treeArray = tree.split(options.separator);
-        // only show dependencies, not top level
-        treeArray.shift();
-        // remove leading utf8 line chars, module@version -> module: version
-        treeArray = treeArray.map(function(s){ return s.slice(4).replace('@',': '); });
-        tree = treeArray.join(options.separator);
-        callback(null, tree);
+      ri('.', {depth: 0}, function(err, data) {
+        var deps = Object.keys(data.dependencies).map(function(v){
+          return v + ': ' + data.dependencies[v].version;
+        }).join(options.separator);
+        callback(null, deps);
       });
     }
 

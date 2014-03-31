@@ -1,18 +1,19 @@
 {
   "name": "grunt-audit",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Generates an audit trail for minified builds with build sha1s and git revision numbers",
   "main": "Gruntfile.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
-    "grunt": "~0.4.1"
+    "grunt": "~0.4.1",
+    "read-installed": "^2.0.2"
   },
   "devDependencies": {
-    "grunt-contrib-clean": "~0.4.1",
-    "grunt-contrib-nodeunit": "~0.2.0",
-    "grunt-contrib-jshint": "~0.6.0"
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-nodeunit": "^0.3.3",
+    "grunt-contrib-jshint": "^0.9.2"
   },
   "scripts": {
     "test": "grunt test"
